@@ -5,6 +5,7 @@ public class ShipMovementController : MonoBehaviour
 {
     private AcitveShipInput movementActions;
     private InputAction movement;
+    private InputAction rotation;
 
     [SerializeField]
     private Rigidbody rb;
@@ -13,6 +14,7 @@ public class ShipMovementController : MonoBehaviour
     {
         movementActions = new AcitveShipInput();
         movement = movementActions.Movement.Movement;
+        rotation = movementActions.Movement.Rotation;
         
         if (rb == null) 
         {
@@ -23,20 +25,26 @@ public class ShipMovementController : MonoBehaviour
     private void OnEnable()
     {
         movement.Enable();
+        rotation.Enable();
     }
 
     private void OnDisable()
     {
         movement.Disable();
+        rotation.Disable();
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
-        Vector3 v3 = movement.ReadValue<Vector3>();
+        Vector3 moveVector3 = movement.ReadValue<Vector3>();
         
-        Debug.Log("v3: " + v3);
+        rb.AddForce(moveVector3, ForceMode.Impulse);
+
+        float rotInput = rotation.ReadValue<float>();
         
-        rb.AddForce(v3, ForceMode.Impulse);
+        float activeRot = rb.rotation.eulerAngles.y + rotInput * 15f;
+        
+        rb.rotation = Quaternion.Euler(0f, activeRot, 0f);
     }
 }
