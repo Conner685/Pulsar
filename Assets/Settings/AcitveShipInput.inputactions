@@ -15,6 +15,16 @@
                     "interactions": "",
                     "initialStateCheck": true,
                     "priority": 0
+                },
+                {
+                    "name": "Rotation",
+                    "type": "Value",
+                    "id": "ad3d763f-633c-4d1c-9d7e-646d0a2ea525",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -74,35 +84,35 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Rotational",
-                    "id": "5d4075f6-d9c1-400c-b332-67547b267cd8",
-                    "path": "OneModifier(modifiersOrder=2)",
+                    "name": "1D Axis",
+                    "id": "2d6e322f-54ef-4a16-b469-30ca3cd58d55",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Rotation",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Binding",
-                    "id": "82ce5b96-d980-4a6f-9a4e-05c911cf7aff",
+                    "name": "negative",
+                    "id": "ecb86e4d-e2ee-418e-a92f-2746035a4199",
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Rotation",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Binding",
-                    "id": "4c9ff349-d91a-49ec-ab11-c9d9aa6edd09",
+                    "name": "positive",
+                    "id": "756a00c2-5e67-486b-8500-0cc05f076d42",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Movement",
+                    "action": "Rotation",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
