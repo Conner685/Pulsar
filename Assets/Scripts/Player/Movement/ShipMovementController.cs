@@ -37,14 +37,17 @@ public class ShipMovementController : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-        Vector3 moveVector3 = movement.ReadValue<Vector3>();
-        
-        rb.AddForce(moveVector3, ForceMode.Impulse);
-
         float rotInput = rotation.ReadValue<float>();
-        
+
         float activeRot = rb.rotation.eulerAngles.y + rotInput * 15f;
         
-        rb.rotation = Quaternion.Euler(0f, activeRot, 0f);
+        Quaternion targetRot = Quaternion.Euler(0f, activeRot, 0f);
+        rb.MoveRotation(targetRot);
+        
+        Vector3 moveInput = movement.ReadValue<Vector3>();
+        
+        Vector3 moveDirection = targetRot * moveInput;
+        
+        rb.AddForce(moveDirection, ForceMode.Impulse);
     }
 }
