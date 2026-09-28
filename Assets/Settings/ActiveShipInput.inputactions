@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "name": "AcitveShipInput",
+    "name": "ActiveShipInput",
     "maps": [
         {
             "name": "Movement",

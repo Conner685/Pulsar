@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class ShipMovementController : MonoBehaviour
 {
-    private AcitveShipInput movementActions;
+    private ActiveShipInput movementActions;
     private InputAction movement;
     private InputAction rotation;
 
@@ -12,11 +12,11 @@ public class ShipMovementController : MonoBehaviour
 
     private void Awake()
     {
-        movementActions = new AcitveShipInput();
+        movementActions = new ActiveShipInput();
         movement = movementActions.Movement.Movement;
         rotation = movementActions.Movement.Rotation;
-        
-        if (rb == null) 
+
+        if (rb == null)
         {
             rb = GetComponent<Rigidbody>();
         }
@@ -40,14 +40,14 @@ public class ShipMovementController : MonoBehaviour
         float rotInput = rotation.ReadValue<float>();
 
         float activeRot = rb.rotation.eulerAngles.y + rotInput * 15f;
-        
+
         Quaternion targetRot = Quaternion.Euler(0f, activeRot, 0f);
         rb.MoveRotation(targetRot);
-        
+
         Vector3 moveInput = movement.ReadValue<Vector3>();
-        
+
         Vector3 moveDirection = targetRot * moveInput;
-        
+
         rb.AddForce(moveDirection, ForceMode.Impulse);
     }
 }
