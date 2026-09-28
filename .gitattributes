@@ -37,7 +37,12 @@
 
 # Unity YAML files
 *.anim                  unity-yaml
-*.asset                 unity-yaml
+# IMPORTANT:
+# Do NOT use YAMLMerge on .asset files.
+# Although some .asset files are YAML-based, others (e.g., LightingData.asset)
+# are binary and will be corrupted if YAMLMerge is applied.
+# Unity’s own documentation specifies YAMLMerge is only safe for .unity and .prefab files.
+#*.asset                 unity-yaml
 *.brush                 unity-yaml
 *.controller            unity-yaml
 *.flare                 unity-yaml
@@ -47,7 +52,9 @@
 *.lighting              unity-yaml
 *.mask                  unity-yaml
 *.mat                   unity-yaml
-*.meta                  unity-yaml
+# Meta files should use "ours" to avoid merge conflicts
+*.meta                   merge=ours
+#*.meta                  unity-yaml
 *.mixer                 unity-yaml
 *.overrideController    unity-yaml
 *.playable              unity-yaml
