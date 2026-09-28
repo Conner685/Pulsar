@@ -529,6 +529,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipMovementController
   rb: {fileID: 767009187}
+  maxSpeed: 15
+  thrust: 50
+  rotationalThrust: 100
+  maxRotationalSpeed: 25
 --- !u!54 &767009187
 Rigidbody:
   m_ObjectHideFlags: 0
