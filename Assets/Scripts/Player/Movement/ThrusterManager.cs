@@ -5,7 +5,6 @@ public struct DirectionThrust
 {
     public ThrusterOrientation orientation;
     public float thrust;
-    public float maxSpeed;
 }
 
 public class ThrusterManager : MonoBehaviour
@@ -25,7 +24,6 @@ public class ThrusterManager : MonoBehaviour
             { 
                 orientation = (ThrusterOrientation)i, 
                 thrust = 0f, 
-                maxSpeed = 0f 
             };
             
         }
@@ -38,8 +36,6 @@ public class ThrusterManager : MonoBehaviour
         {
             directedThrust[(int)thruster.GetOrientation()].thrust
                 += thruster.GetThrust();
-            directedThrust[(int)thruster.GetOrientation()].maxSpeed
-                += thruster.GetMaxSpeed();
         }
     }
 
