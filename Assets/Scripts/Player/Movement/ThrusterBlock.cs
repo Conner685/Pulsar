@@ -2,10 +2,10 @@ using UnityEngine;
 
 public enum ThrusterOrientation
 {
-    Left,
-    Right,
-    Forward,
-    Backward
+    Forward = 0,
+    Backward = 1,
+    Left = 2,
+    Right = 3
 }
 
 public class ThrusterBlock : MonoBehaviour
@@ -17,7 +17,7 @@ public class ThrusterBlock : MonoBehaviour
     private float maxSpeed;
 
     [SerializeField]
-    private ThrusterOrientation orientation = ThrusterOrientation.Left;
+    private ThrusterOrientation orientation = ThrusterOrientation.Forward;
 
     private float defaultSpeed = 0.1f;
 

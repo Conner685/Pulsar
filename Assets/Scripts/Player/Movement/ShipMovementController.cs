@@ -20,6 +20,9 @@ public class ShipMovementController : MonoBehaviour
     private float rotationalThrust;
     [SerializeField]
     private float maxRotationalSpeed;
+    
+    [SerializeField]
+    private ThrusterManager thrusterManager;
 
     private void Awake()
     {
@@ -30,6 +33,11 @@ public class ShipMovementController : MonoBehaviour
         if (rb == null)
         {
             rb = GetComponent<Rigidbody>();
+        }
+        
+        if (thrusterManager == null)
+        {
+            thrusterManager = GetComponent<ThrusterManager>();
         }
     }
 
@@ -45,21 +53,50 @@ public class ShipMovementController : MonoBehaviour
         rotation.Disable();
     }
 
-    // Update is called once per frame
     private void FixedUpdate()
     {
         float rotInput = rotation.ReadValue<float>();
-        rb.AddRelativeTorque(Vector3.up * (rotInput * rotationalThrust), ForceMode.Force);
+        rb.AddRelativeTorque(Vector3.up * (rotInput * rotationalThrust),
+            ForceMode.Force);
 
         if (rb.angularVelocity.magnitude > maxRotationalSpeed)
         {
-            rb.angularVelocity = rb.angularVelocity.normalized * maxRotationalSpeed;
+            rb.angularVelocity
+                = rb.angularVelocity.normalized * maxRotationalSpeed;
+        }
+        
+        
+        Vector3 moveInput = movement.ReadValue<Vector3>();
+        Vector3 localForce = Vector3.zero;
+
+        if (moveInput.z > 0)
+        {
+            DirectionThrust t
+                = thrusterManager.GetDirectionThrust(
+                    ThrusterOrientation.Forward);
+            localForce.z = moveInput.z * (t.thrust + thrust);
+        }
+        else if (moveInput.z < 0)
+        {
+            DirectionThrust t =  thrusterManager.GetDirectionThrust(
+                ThrusterOrientation.Backward);
+            localForce.z = moveInput.z * (t.thrust + thrust);
         }
 
-        Vector3 moveInput = movement.ReadValue<Vector3>();
-        Vector3 moveDirection = rb.rotation * moveInput;
+        if (moveInput.x > 0)
+        {
+            DirectionThrust t = thrusterManager.GetDirectionThrust(
+                ThrusterOrientation.Right);
+            localForce.x = moveInput.x * (t.thrust + thrust);
+        }
+        else if (moveInput.x < 0)
+        {
+            DirectionThrust t = thrusterManager.GetDirectionThrust(
+                ThrusterOrientation.Left);
+            localForce.x = moveInput.x * (t.thrust + thrust);
+        }
         
-        rb.AddForce(moveDirection * thrust, ForceMode.Force);
+        rb.AddRelativeForce(localForce, ForceMode.Force);
 
         if (rb.linearVelocity.magnitude > maxSpeed)
         {

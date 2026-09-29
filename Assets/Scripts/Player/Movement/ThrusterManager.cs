@@ -15,10 +15,20 @@ public class ThrusterManager : MonoBehaviour
 
     private DirectionThrust[] directedThrust;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         directedThrust = new DirectionThrust[4];
+        
+        for (int i = 0; i < 4; i++)
+        {
+            directedThrust[i] = new DirectionThrust 
+            { 
+                orientation = (ThrusterOrientation)i, 
+                thrust = 0f, 
+                maxSpeed = 0f 
+            };
+            
+        }
         CalculateThrusters();
     }
 
@@ -37,4 +47,5 @@ public class ThrusterManager : MonoBehaviour
     {
         return directedThrust[(int)orientation];
     }
+    
 }

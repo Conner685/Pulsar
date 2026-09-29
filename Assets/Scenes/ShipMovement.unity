@@ -509,6 +509,7 @@ GameObject:
   - component: {fileID: 767009188}
   - component: {fileID: 767009187}
   - component: {fileID: 767009186}
+  - component: {fileID: 767009192}
   m_Layer: 0
   m_Name: ControlNode
   m_TagString: Untagged
@@ -529,10 +530,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipMovementController
   rb: {fileID: 767009187}
-  maxSpeed: 15
-  thrust: 75
-  rotationalThrust: 100
-  maxRotationalSpeed: 25
+  maxSpeed: 3
+  thrust: 1
+  rotationalThrust: 0.1
+  maxRotationalSpeed: 0.5
+  thrusterManager: {fileID: 767009192}
 --- !u!54 &767009187
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -655,6 +657,20 @@ Transform:
   - {fileID: 1411933897}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &767009192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767009185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a065edf6c6f717428c6f24af01794d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrusterManager
+  thrusters:
+  - {fileID: 1411933901}
 --- !u!1 &1411933896
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,6 +683,7 @@ GameObject:
   - component: {fileID: 1411933900}
   - component: {fileID: 1411933899}
   - component: {fileID: 1411933898}
+  - component: {fileID: 1411933901}
   m_Layer: 0
   m_Name: Thruster
   m_TagString: Untagged
@@ -769,6 +786,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411933896}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1411933901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411933896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9de671aede83cc14a9b07a584644a526, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThrusterBlock
+  thrust: 5
+  maxSpeed: 10
+  orientation: 2
 --- !u!1 &1968389241
 GameObject:
   m_ObjectHideFlags: 0
