@@ -36,17 +36,18 @@ public class ThrusterBlock : MonoBehaviour
         }
     }
 
-    public float getThrust()
+    public float GetThrust()
     {
         return thrust;
     }
+    
 
-    public float getMaxSpeed()
+    public float GetMaxSpeed()
     {
         return maxSpeed;
     }
 
-    public ThrusterOrientation getOrientation()
+    public ThrusterOrientation GetOrientation()
     {
         return orientation;
     }

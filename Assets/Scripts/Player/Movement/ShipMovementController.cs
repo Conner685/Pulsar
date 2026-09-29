@@ -21,9 +21,6 @@ public class ShipMovementController : MonoBehaviour
     [SerializeField]
     private float maxRotationalSpeed;
 
-    private Vector3 curSpeed;
-    private float curRotSpeed;
-
     private void Awake()
     {
         movementActions = new ActiveShipInput();
@@ -52,20 +49,21 @@ public class ShipMovementController : MonoBehaviour
     private void FixedUpdate()
     {
         float rotInput = rotation.ReadValue<float>();
-        curRotSpeed = rotInput * rotationalThrust * Time.fixedDeltaTime;
-        curRotSpeed = Mathf.Clamp(curRotSpeed, -maxRotationalSpeed, maxRotationalSpeed);
-        
-        float activeRot = rb.rotation.eulerAngles.y + curRotSpeed;
-        Quaternion targetRot = Quaternion.Euler(0f, activeRot, 0f);
-        
-        rb.MoveRotation(targetRot);
+        rb.AddRelativeTorque(Vector3.up * (rotInput * rotationalThrust), ForceMode.Force);
+
+        if (rb.angularVelocity.magnitude > maxRotationalSpeed)
+        {
+            rb.angularVelocity = rb.angularVelocity.normalized * maxRotationalSpeed;
+        }
 
         Vector3 moveInput = movement.ReadValue<Vector3>();
-        Vector3 moveDirection = targetRot * moveInput;
+        Vector3 moveDirection = rb.rotation * moveInput;
+        
+        rb.AddForce(moveDirection * thrust, ForceMode.Force);
 
-        curSpeed = moveDirection * thrust;
-        curSpeed *= Time.fixedDeltaTime;
-        curSpeed = Vector3.ClampMagnitude(curSpeed, maxSpeed);
-        rb.AddForce(curSpeed, ForceMode.Force);
+        if (rb.linearVelocity.magnitude > maxSpeed)
+        {
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+        }
     }
 }

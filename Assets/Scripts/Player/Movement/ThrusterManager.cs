@@ -19,17 +19,17 @@ public class ThrusterManager : MonoBehaviour
     private void Awake()
     {
         directedThrust = new DirectionThrust[4];
-        calculateThrusters();
+        CalculateThrusters();
     }
 
-    private void calculateThrusters()
+    private void CalculateThrusters()
     {
         foreach (ThrusterBlock thruster in thrusters)
         {
-            directedThrust[(int)thruster.getOrientation()].thrust
-                += thruster.getThrust();
-            directedThrust[(int)thruster.getOrientation()].maxSpeed
-                += thruster.getMaxSpeed();
+            directedThrust[(int)thruster.GetOrientation()].thrust
+                += thruster.GetThrust();
+            directedThrust[(int)thruster.GetOrientation()].maxSpeed
+                += thruster.GetMaxSpeed();
         }
     }
 
