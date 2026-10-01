@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Represents a single player weapon
@@ -8,7 +9,7 @@ using UnityEngine;
 /// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
 ///
 /// @author Alfredo Luzardo
-/// @version 1.0
+/// @version 1.1
 /// </summary>
 public class PlayerWeapon : Weapon
 {
@@ -19,12 +20,19 @@ public class PlayerWeapon : Weapon
     /// </summary>
     private void Update()
     {
-        // Get reference to player controls
+        // Get reference to player controls here, currently im
+        // hardcoding keybinds for testing sake
 
         fireTimer += Time.deltaTime;
 
-        // if Fire key clicked, firetimer is <= fireRate
-        //      fire weapon strategy
-        //      fireTimer = 0f
+        if (Keyboard.current == null ||
+            !Keyboard.current.spaceKey.isPressed ||
+            !(fireTimer >= weaponStrategy.FireRate))
+        {
+            return;
+        }
+
+        weaponStrategy.Fire(firePoint);
+        fireTimer = 0f;
     }
 }

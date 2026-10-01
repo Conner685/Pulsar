@@ -6,7 +6,7 @@ using UnityEngine;
 /// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
 ///
 /// @author Alfredo Luzardo
-/// @version 1.0
+/// @version 1.1
 /// </summary>
 [CreateAssetMenu(fileName = "WeaponStrategy",
     menuName = "Scriptable Objects/WeaponStrategy")]
@@ -39,10 +39,8 @@ public abstract class WeaponStrategy : ScriptableObject
 
     /// <summary>
     /// Abstract Fire function
-    /// 
-    /// Has layer so we know the layer to put projectile onto
+    ///
     /// </summary>
     /// <param name="firePoint"></param>
-    /// <param name="layer"></param>
-    public abstract void Fire(Transform firePoint, LayerMask layer);
+    public abstract void Fire(Transform firePoint);
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 /// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
 /// 
 /// @author Alfredo Luzardo
-/// @version 1.0
+/// @version 1.1
 /// </summary>
 public class Projectile : MonoBehaviour
 {
@@ -20,11 +20,8 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private GameObject hitEffectPrefab;
 
-    private Transform _parent;
-
     // Some useful setters
     public void SetSpeed(float input) => speed = input;
-    public void SetParent(Transform parent) => _parent = parent;
 
     // Start Method ->
     //      will need to activate the launch effect
@@ -35,7 +32,7 @@ public class Projectile : MonoBehaviour
     private void Update()
     {
         transform.SetParent(null);
-        transform.position += transform.forward * (speed * Time.deltaTime);
+        transform.position += transform.up * (speed * Time.deltaTime);
     }
 
     /// <summary>
@@ -43,14 +40,21 @@ public class Projectile : MonoBehaviour
     /// and destroy itself
     /// </summary>
     /// <param name="collision"></param>
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
+        // Bullets cant collide
+        if (collision.gameObject.GetComponent<Projectile>() != null)
+        {
+            return;
+        }
+
         if (hitEffectPrefab != null)
         {
+            Debug.Log("Hit Effect");
             // Hit effect
         }
 
-        // Damage
+        // Will need to deal damage here?
 
         Destroy(gameObject);
     }

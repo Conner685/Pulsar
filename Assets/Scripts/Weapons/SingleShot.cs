@@ -6,7 +6,7 @@ using UnityEngine;
 /// Reference: https://www.youtube.com/watch?v=2mThTAhD16M
 ///
 /// @author Alfredo Luzardo
-/// @version 1.0
+/// @version 1.1
 /// </summary>
 [CreateAssetMenu(fileName = "SingleShot",
     menuName = "Scriptable Objects/SingleShot")]
@@ -17,13 +17,13 @@ public class SingleShot : WeaponStrategy
     /// </summary>
     /// <param name="firePoint"></param>
     /// <param name="layer"></param>
-    public override void Fire(Transform firePoint, LayerMask layer)
+    public override void Fire(Transform firePoint)
     {
-        GameObject projectile = Instantiate(projectilePrefab,
-            firePoint.position, firePoint.rotation);
-
-        projectile.transform.SetParent(firePoint);
-        projectile.layer = layer;
+        GameObject projectile = Instantiate(
+            projectilePrefab,
+            firePoint.position,
+            firePoint.rotation
+        );
 
         Projectile projectileComponent = projectile.GetComponent<Projectile>();
         projectileComponent.SetSpeed(projectileSpeed);
