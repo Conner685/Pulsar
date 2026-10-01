@@ -1,59 +1,38 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
-    //create private internal references
-    private InputActions _inputActions;
-    private InputAction _movement;
-    private Rigidbody _rb;
-
     [SerializeField]
-    private float moveSpeed = 5f;
+    private InputReader input;
 
-    [SerializeField]
-    private float acceleration = 8f;
-
-    [SerializeField]
-    private float deceleration = 3f;
-
-    private void Awake()
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Start()
     {
-        _rb = GetComponent<Rigidbody>(); //get rigidbody, responsible for enabling collision with other colliders
-        _inputActions = new InputActions(); //create new InputActions
-        _movement = _inputActions.Player.Movement;
+        input.MoveEvent += HandleMove;
+        input.ShootEvent += HandleShoot;
+        input.RotateEvent += HandleRotate;
+        input.EnablePlayerActions();
     }
 
-    //called when script enabled
-    private void OnEnable()
+    private void OnDestroy()
     {
-        _movement.Enable();
+        input.MoveEvent -= HandleMove;
+        input.ShootEvent -= HandleShoot;
+        input.RotateEvent -= HandleRotate;
     }
 
-    //called when script disabled
-    private void OnDisable()
+    private void HandleRotate(float obj)
     {
-        _movement.Disable();
+        Debug.Log($"rotate: {obj}");
     }
 
-    //called every physics update
-    private void FixedUpdate()
+    private void HandleShoot()
     {
-        Vector2 input = _movement.ReadValue<Vector2>();
-        input = Vector2.ClampMagnitude(input, 1f);
+        Debug.Log("Pew pew");
+    }
 
-        Vector3 targetVelocity = new Vector3(input.x, 0f, input.y) * moveSpeed;
-
-        float changeRate
-            = input.sqrMagnitude > 0.001f ? acceleration : deceleration;
-
-        Vector3 currentVelocity = _rb.linearVelocity;
-        currentVelocity.y = 0f;
-
-        _rb.linearVelocity = Vector3.MoveTowards(
-            currentVelocity,
-            targetVelocity,
-            changeRate * Time.fixedDeltaTime);
+    private void HandleMove(Vector2 obj)
+    {
+        Debug.Log("Handling move: " + obj);
     }
 }
