@@ -3,26 +3,36 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private InputReader inputReader;
+    private InputReader input;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        inputReader.ShipMoveEvent += HandleShipMove;
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
+        input.MoveEvent += HandleMove;
+        input.ShootEvent += HandleShoot;
+        input.RotateEvent += HandleRotate;
+        input.EnablePlayerActions();
     }
 
     private void OnDestroy()
     {
-        inputReader.ShipMoveEvent -= HandleShipMove;
+        input.MoveEvent -= HandleMove;
+        input.ShootEvent -= HandleShoot;
+        input.RotateEvent -= HandleRotate;
     }
 
-    private void HandleShipMove(Vector2 obj)
+    private void HandleRotate(float obj)
     {
-        Debug.Log("Handling ship move!");
+        Debug.Log($"rotate: {obj}");
+    }
+
+    private void HandleShoot()
+    {
+        Debug.Log("Pew pew");
+    }
+
+    private void HandleMove(Vector2 obj)
+    {
+        Debug.Log("Handling move: " + obj);
     }
 }
