@@ -28,7 +28,7 @@ namespace Pulsar.Building
 
         // destroy tile
         private Tile _highlightedTile;
-        private Color _highlightOrigColor;
+        private Vector3 _cursorWorld;
 
 
         private void Start()
@@ -62,6 +62,13 @@ namespace Pulsar.Building
                 }
             }
 
+            if (!TryGetCursorWorld(out _cursorWorld))
+            {
+                ClearHover();
+                ClearDestroyHighlight();
+                return;
+            }
+
             if (_scanActive)
             {
                 UpdateScanZoneShape();
@@ -77,17 +84,17 @@ namespace Pulsar.Building
         {
             Bounds b = grid.GetLocalBounds();
             float rx = b.extents.x + scanPadding;
-            float ry = b.extents.y + scanPadding;
+            float rz = b.extents.z + scanPadding;
             Vector3 center = grid.transform.TransformPoint(b.center);
             Quaternion rot = grid.transform.rotation;
 
-            _radialMenu.UpdateShape(center, rx, ry, rot);
+            _radialMenu.UpdateShape(center, rx, rz, rot);
         }
         
 
         private void UpdateHover()
         {
-            Vector2 cursor = GetCursorWorld();
+            Vector2 cursor = ShipUtilities.LocalToGrid(_cursorWorld);
 
             // Find the floating tile closest to cursor
             Tile best = null;
@@ -99,7 +106,7 @@ namespace Pulsar.Building
                 if (t.IsAttached) continue;
                 if (!_radialMenu.IsInside(t.transform.position)) continue;
 
-                float d = Vector2.Distance(cursor, (Vector2)t.transform.position);
+                float d = Vector2.Distance(cursor, ShipUtilities.LocalToGrid(t.transform.position));
                 if (d < bestDist)
                 {
                     bestDist = d;
@@ -116,6 +123,7 @@ namespace Pulsar.Building
             if (best != _hoveredTile)
             {
                 ClearHover();
+                ClearDestroyHighlight();
                 _hoveredTile = best;
                 _hoveredTile.Highlight(hoverTint);
             }
@@ -130,9 +138,9 @@ namespace Pulsar.Building
                 _attachRotation = result.Value.rotation;
                 _attachValid = true;
 
-                Vector3 ghostWorld = grid.transform.TransformPoint((Vector2)_attachCell);
+                Vector3 ghostWorld = grid.CellToWorld(_attachCell);
                 Quaternion ghostRot = grid.transform.rotation
-                                      * Quaternion.Euler(0f, 0f, _attachRotation * 90f);
+                                      * ShipUtilities.RotateQuarterOnYAxis(_attachRotation);
                 _ghost.Show(_hoveredTile.tileInfo.sprite, ghostWorld, true, ghostRot);
             }
             else
@@ -144,9 +152,8 @@ namespace Pulsar.Building
             if (Input.GetKeyDown(KeyCode.C) && _attachValid)
             {
                 TileInfoSO info = _hoveredTile.tileInfo;
-                if (grid.Attach(_attachCell, info, _attachRotation))
+                if (grid.Attach(_attachCell, _hoveredTile, _attachRotation))
                 {
-                    Destroy(_hoveredTile.gameObject);
                     _hoveredTile = null;
                     _attachValid = false;
                     _ghost.Hide();
@@ -170,27 +177,20 @@ namespace Pulsar.Building
 
         private void UpdateDestroyMode()
         {
-            Vector2 cursorWorld = GetCursorWorld();
+            Vector3 cursorWorld = _cursorWorld;
             Tile tile = grid.GetTileAtWorldPos(cursorWorld);
 
             // un-highlight previous
             if (_highlightedTile != null && _highlightedTile != tile)
             {
-                SpriteRenderer sr = _highlightedTile.GetComponent<SpriteRenderer>();
-                if (sr != null) sr.color = _highlightOrigColor;
-                _highlightedTile = null;
+                ClearDestroyHighlight();
             }
 
             // highlight current 
             if (tile != null && tile != grid.Core && _highlightedTile != tile)
             {
                 _highlightedTile = tile;
-                SpriteRenderer sr = tile.GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    _highlightOrigColor = sr.color;
-                    sr.color = Color.red;
-                }
+                tile.Highlight(Color.red);
             }
 
             if (Input.GetKeyDown(KeyCode.X) && _highlightedTile != null)
@@ -202,11 +202,27 @@ namespace Pulsar.Building
         }
 
 
-        private Vector2 GetCursorWorld()
+        private void ClearDestroyHighlight()
         {
-            Vector3 screen = Input.mousePosition;
-            screen.z = -gameplayCamera.transform.position.z;
-            return gameplayCamera.ScreenToWorldPoint(screen);
+            if (_highlightedTile != null) _highlightedTile.Unhighlight();
+            _highlightedTile = null;
+        }
+
+        private bool TryGetCursorWorld(out Vector3 worldPoint)
+        {
+            worldPoint = default;
+            if (gameplayCamera == null || grid == null) return false;
+            Plane plane = new Plane(Vector3.up, grid.transform.position);
+            Ray ray = gameplayCamera.ScreenPointToRay(Input.mousePosition);
+            if (!plane.Raycast(ray, out float distance)) return false;
+            worldPoint = ray.GetPoint(distance);
+            return true;
+        }
+
+        private void OnDestroy()
+        {
+            if (_radialMenu != null) Destroy(_radialMenu.gameObject);
+            if (_ghost != null) Destroy(_ghost.gameObject);
         }
     }
 }

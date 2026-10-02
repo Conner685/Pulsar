@@ -1,4 +1,5 @@
 using UnityEngine;
+using Pulsar.Ship;
 
 namespace Pulsar.Building
 {
@@ -11,7 +12,7 @@ namespace Pulsar.Building
 
         // cached oval params 
         private Vector3 _center;
-        private float _rx, _ry;
+        private float _rx, _rz;
         private Quaternion _rotation;
 
         private void Awake()
@@ -20,7 +21,9 @@ namespace Pulsar.Building
             GameObject fillGO = new GameObject("ScanZone_Fill");
             fillGO.transform.SetParent(transform, false);
             _fillTransform = fillGO.transform;
+            _fillTransform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             _fillSr = fillGO.AddComponent<SpriteRenderer>();
+            _fillSr.sharedMaterial = ShipUtilities.UnlitSpriteMaterial;
             _fillSr.sprite = GenerateCircleSprite();
             _fillSr.color = new Color(0f, 1f, 0f, 0.10f);
             _fillSr.sortingOrder = -10;
@@ -33,7 +36,7 @@ namespace Pulsar.Building
             _outline.loop = true;
             _outline.positionCount = Segments;
             _outline.widthMultiplier = 0.05f;
-            _outline.material = new Material(Shader.Find("Sprites/Default"));
+            _outline.sharedMaterial = ShipUtilities.UnlitSpriteMaterial;
             _outline.startColor = Color.white;
             _outline.endColor = Color.white;
             _outline.sortingOrder = -9;
@@ -41,38 +44,45 @@ namespace Pulsar.Building
             gameObject.SetActive(false);
         }
         
-        public void UpdateShape(Vector3 worldCenter, float rx, float ry, Quaternion rotation)
+        public void UpdateShape(Vector3 worldCenter, float rx, float rz, Quaternion rotation)
         {
             _center = worldCenter;
             _rx = rx;
-            _ry = ry;
+            _rz = rz;
             _rotation = rotation;
 
             transform.SetPositionAndRotation(worldCenter, rotation);
 
-            _fillTransform.localScale = new Vector3(rx, ry, 1f);
+            _fillTransform.localScale = new Vector3(rx, rz, 1f);
 
             for (int i = 0; i < Segments; i++)
             {
                 float angle = i * Mathf.PI * 2f / Segments;
                 _outline.SetPosition(i, new Vector3(
                     Mathf.Cos(angle) * rx,
-                    Mathf.Sin(angle) * ry,
-                    0f));
+                    0f,
+                    Mathf.Sin(angle) * rz));
             }
         }
 
-        public bool IsInside(Vector2 worldPoint)
+        public bool IsInside(Vector3 worldPoint)
         {
-            if (_rx <= 0f || _ry <= 0f) return false;
-            Vector2 local = (Vector2)(Quaternion.Inverse(_rotation) * ((Vector3)worldPoint - _center));
+            if (_rx <= 0f || _rz <= 0f) return false;
+            Vector3 local = Quaternion.Inverse(_rotation) * (worldPoint - _center);
             float nx = local.x / _rx;
-            float ny = local.y / _ry;
-            return (nx * nx + ny * ny) <= 1f;
+            float nz = local.z / _rz;
+            return (nx * nx + nz * nz) <= 1f;
         }
 
         public void Show() => gameObject.SetActive(true);
         public void Hide() => gameObject.SetActive(false);
+
+        private void OnDestroy()
+        {
+            if (_fillSr == null || _fillSr.sprite == null) return;
+            Destroy(_fillSr.sprite.texture);
+            Destroy(_fillSr.sprite);
+        }
 
         private static Sprite GenerateCircleSprite()
         {

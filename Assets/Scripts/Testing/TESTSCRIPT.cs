@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using Pulsar.Ship;
-using Pulsar.Building;
+
 
 namespace Pulsar.Testing
 {
@@ -18,7 +16,7 @@ namespace Pulsar.Testing
         [SerializeField] private float driftSpeedMax = 1.5f;
 
         public ShipGrid shipGrid;
-        private Camera _cam;
+
 
         private void Update()
         {
@@ -34,12 +32,12 @@ namespace Pulsar.Testing
 
             float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
             float dist = Random.Range(spawnMinRadius, spawnMaxRadius);
-            Vector2 shipPos = shipGrid.transform.position;
-            Vector2 pos = shipPos + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * dist;
+            Vector3 shipPos = shipGrid.transform.position;
+            Vector3 pos = shipPos + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * dist;
 
-            Vector2 toShip = (shipPos - pos).normalized;
-            Vector2 velocity = toShip * Random.Range(driftSpeedMin, driftSpeedMax)
-                               + Random.insideUnitCircle * 0.3f;
+            Vector3 toShip = (shipPos - pos).normalized;
+            Vector3 velocity = toShip * Random.Range(driftSpeedMin, driftSpeedMax)
+                               + ShipUtilities.GridToLocal(Random.insideUnitCircle) * 0.3f;
 
             Tile.SpawnFloating(infor, pos, velocity);
         }

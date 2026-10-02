@@ -1,4 +1,5 @@
 using UnityEngine;
+using Pulsar.Ship;
 namespace Pulsar.Building
 {
 
@@ -9,7 +10,7 @@ public class GhostPreview : MonoBehaviour
     private static readonly Color InvalidColor = new(1f, 0f, 0f, 0.4f);
     private void Awake()
     {
-        _sr = gameObject.AddComponent<SpriteRenderer>();
+        _sr = Tile.CreateVisual(transform);
         _sr.sortingOrder = 100;
         gameObject.SetActive(false);
     }

@@ -13,7 +13,7 @@ namespace Pulsar.Ship
         public float hp = 10f;
         public float mass = 1f;
 
-        [Header("Edges: UP, RIGHT, DOWN, LEFT")]
+        [Header("Edges: FORWARD (+Z), RIGHT (+X), BACK (-Z), LEFT (-X)")]
         public bool[] connectableEdges = { true, true, true, true };
     }
 
