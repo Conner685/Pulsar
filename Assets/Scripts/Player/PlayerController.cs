@@ -5,6 +5,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private InputReader input;
 
+    [SerializeField]
+    private PlayerWeapon[] weapons;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -28,7 +31,13 @@ public class PlayerController : MonoBehaviour
 
     private void HandleShoot()
     {
-        Debug.Log("Pew pew");
+        foreach (PlayerWeapon weapon in weapons)
+        {
+            if (weapon != null)
+            {
+                weapon.Fire();
+            }
+        }
     }
 
     private void HandleMove(Vector2 obj)

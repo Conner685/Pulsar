@@ -20,14 +20,13 @@ public class PlayerWeapon : Weapon
     /// </summary>
     private void Update()
     {
-        // Get reference to player controls here, currently im
-        // hardcoding keybinds for testing sake
-
         fireTimer += Time.deltaTime;
+    }
 
-        if (Keyboard.current == null ||
-            !Keyboard.current.spaceKey.isPressed ||
-            !(fireTimer >= weaponStrategy.FireRate))
+    public void Fire()
+    {
+        if (!isActiveAndEnabled ||
+            fireTimer < weaponStrategy.FireRate)
         {
             return;
         }
