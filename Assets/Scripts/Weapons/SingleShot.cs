@@ -27,8 +27,5 @@ public class SingleShot : WeaponStrategy
 
         Projectile projectileComponent = projectile.GetComponent<Projectile>();
         projectileComponent.SetSpeed(projectileSpeed);
-
-        // For now bullets have a lifetime
-        Destroy(projectile, lifeTime);
     }
 }

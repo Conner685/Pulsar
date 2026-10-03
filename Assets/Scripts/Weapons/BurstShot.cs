@@ -13,9 +13,14 @@ using System.Collections;
     menuName = "Scriptable Objects/BurstShot")]
 public class BurstShot : WeaponStrategy
 {
-    private const int k_MaxBullets = 3;
-    private const int k_BulletStart = 0;
-    private const float k_bulletGapTime = 0.1f;
+    [SerializeField]
+    private int k_MaxBullets = 3;
+
+    [SerializeField]
+    private int k_BulletStart = 0;
+
+    [SerializeField]
+    private float k_bulletGapTime = 0.1f;
 
     /// <summary>
     /// Fire method
@@ -45,8 +50,6 @@ public class BurstShot : WeaponStrategy
                 projectilePrefab, firePoint.position, firePoint.rotation);
 
             bullet.GetComponent<Projectile>().SetSpeed(projectileSpeed);
-
-            Destroy(bullet, lifeTime);
 
             yield return new WaitForSeconds(k_bulletGapTime);
         }

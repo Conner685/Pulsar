@@ -15,6 +15,9 @@ public class Projectile : MonoBehaviour
     private float speed;
 
     [SerializeField]
+    private float lifeTime;
+
+    [SerializeField]
     private GameObject launchEffectPrefab;
 
     [SerializeField]
@@ -23,16 +26,26 @@ public class Projectile : MonoBehaviour
     // Some useful setters
     public void SetSpeed(float input) => speed = input;
 
-    // Start Method ->
-    //      will need to activate the launch effect
+    /// <summary>
+    /// Start method.
+    /// </summary>
+    private void Start()
+    {
+        transform.SetParent(null);
+        // launch effect
+        if (launchEffectPrefab != null)
+        {
+            Debug.Log("launch Effect");
+        }
+    }
 
     /// <summary>
     /// Move the projectile
     /// </summary>
     private void Update()
     {
-        transform.SetParent(null);
         transform.position += transform.up * (speed * Time.deltaTime);
+        Destroy(gameObject, lifeTime);
     }
 
     /// <summary>
@@ -50,8 +63,8 @@ public class Projectile : MonoBehaviour
 
         if (hitEffectPrefab != null)
         {
+            // Hit Effect
             Debug.Log("Hit Effect");
-            // Hit effect
         }
 
         // Will need to deal damage here?

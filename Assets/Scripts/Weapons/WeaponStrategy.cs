@@ -28,9 +28,6 @@ public abstract class WeaponStrategy : ScriptableObject
     protected float projectileSpeed = 10f;
 
     [SerializeField]
-    protected float lifeTime = 4f;
-
-    [SerializeField]
     protected GameObject projectilePrefab;
 
     // some public properties we may want to access

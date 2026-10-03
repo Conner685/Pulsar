@@ -10,10 +10,17 @@ using UnityEngine;
     menuName = "Scriptable Objects/TripleShot")]
 public class TripleShot : WeaponStrategy
 {
-    private const float k_LeftAngle = -45f;
-    private const float k_MiddleAngle = 0f;
-    private const float k_RightAngle = 45f;
-    private const float k_DefaultRotation = 0f;
+    [SerializeField]
+    private float k_LeftAngle = -45f;
+
+    [SerializeField]
+    private float k_MiddleAngle = 0f;
+
+    [SerializeField]
+    private float k_RightAngle = 45f;
+
+    [SerializeField]
+    private float k_DefaultRotation = 0f;
 
     /// <summary>
     /// Shoots three times at different angles
@@ -45,7 +52,5 @@ public class TripleShot : WeaponStrategy
 
         Projectile projectileComponent = projectile.GetComponent<Projectile>();
         projectileComponent.SetSpeed(projectileSpeed);
-
-        Destroy(projectile, lifeTime);
     }
 }

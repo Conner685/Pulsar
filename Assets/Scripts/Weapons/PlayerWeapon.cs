@@ -15,6 +15,10 @@ public class PlayerWeapon : Weapon
 {
     private float fireTimer;
 
+    // TODO: Refactor into coroutine/async func
+    //   - In order to not need to do this every frame
+    //   - Can set bool, run coroutine for n seconds,
+    //     then reset the bool
     /// <summary>
     /// Trigger the weapon fire if the button is clicked
     /// </summary>
