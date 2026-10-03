@@ -228,7 +228,7 @@ MonoBehaviour:
   stoppingDistance: 5
   retreatDistance: 1
   turnSpeed: 4
-  weaveAmount: 0.35
+  driftAmount: 0.3
   weaveFrequency: 1.5
   projectile: {fileID: 7942582204932555885, guid: d7a946ed906c71748ba76f243da8f159, type: 3}
   firePoint: {fileID: 0}
@@ -295,9 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea322a7f591efe4dbaa2a943fa34569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
-  acceleration: 8
-  deceleration: 3
+  input: {fileID: 0}
 --- !u!65 &366356097
 BoxCollider:
   m_ObjectHideFlags: 0
