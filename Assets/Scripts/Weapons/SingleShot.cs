@@ -17,7 +17,7 @@ public class SingleShot : WeaponStrategy
     /// </summary>
     /// <param name="firePoint"></param>
     /// <param name="layer"></param>
-    public override void Fire(Transform firePoint)
+    public override void Fire(Transform firePoint, Weapon weapon)
     {
         GameObject projectile = Instantiate(
             projectilePrefab,

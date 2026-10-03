@@ -26,7 +26,7 @@ public class TripleShot : WeaponStrategy
     /// Shoots three times at different angles
     /// </summary>
     /// <param name="firePoint"></param>
-    public override void Fire(Transform firePoint)
+    public override void Fire(Transform firePoint, Weapon weapon)
     {
         Shoot(firePoint, k_LeftAngle);
         Shoot(firePoint, k_MiddleAngle);

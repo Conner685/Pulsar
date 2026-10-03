@@ -26,10 +26,9 @@ public class BurstShot : WeaponStrategy
     /// Fire method
     /// </summary>
     /// <param name="firePoint"></param>
-    public override void Fire(Transform firePoint)
+    public override void Fire(Transform firePoint, Weapon weapon)
     {
-        firePoint.GetComponentInParent<Weapon>()
-            .StartCoroutine(Burst(firePoint));
+        weapon.StartCoroutine(Burst(firePoint));
     }
 
     /// <summary>

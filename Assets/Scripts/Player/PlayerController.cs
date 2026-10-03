@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"rotate: {obj}");
     }
 
+    // TODO: Can make an event where the player
+    //  can listen for it and manage the player weapon list themselves.
+    //  For performance reasons
     private void HandleShoot()
     {
         foreach (PlayerWeapon weapon in weapons)

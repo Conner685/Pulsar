@@ -30,12 +30,12 @@ public class PlayerWeapon : Weapon
     public void Fire()
     {
         if (!isActiveAndEnabled ||
-            fireTimer < weaponStrategy.FireRate)
+            fireTimer < weaponStrategy.fireRate)
         {
             return;
         }
 
-        weaponStrategy.Fire(firePoint);
+        weaponStrategy.Fire(firePoint, this);
         fireTimer = 0f;
     }
 }

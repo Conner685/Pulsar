@@ -13,12 +13,6 @@ using UnityEngine;
 public abstract class WeaponStrategy : ScriptableObject
 {
     [SerializeField]
-    protected int damage = 10;
-
-    [SerializeField]
-    protected float fireRate = 0.5f;
-
-    [SerializeField]
     protected float radius = 1f;
 
     [SerializeField]
@@ -30,14 +24,16 @@ public abstract class WeaponStrategy : ScriptableObject
     [SerializeField]
     protected GameObject projectilePrefab;
 
-    // some public properties we may want to access
-    public int Damage => damage;
-    public float FireRate => fireRate;
+    [field: SerializeField]
+    public int damage { get; protected set; } = 10;
+
+    [field: SerializeField]
+    public float fireRate { get; protected set; } = 0.5f;
 
     /// <summary>
     /// Abstract Fire function
     ///
     /// </summary>
     /// <param name="firePoint"></param>
-    public abstract void Fire(Transform firePoint);
+    public abstract void Fire(Transform firePoint, Weapon weapon);
 }
