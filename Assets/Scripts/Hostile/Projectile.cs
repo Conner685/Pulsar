@@ -2,20 +2,31 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 10f;
-    public float lifetime = 5f;
+    private const float MinAimSquared = 0.0001f;
+
+    [SerializeField]
+    private float speed = 10f;
+
+    [SerializeField]
+    private float lifetime = 5f;
+
     private Vector3 direction;
 
     private void Start()
     {
+        // TODO: Replace the player object lookup per projectile with a shared player reference
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
 
         if (playerObj != null)
         {
             Vector3 toPlayer
                 = playerObj.transform.position - transform.position;
+            /*
+             * makes the projectile move horizontally on the XZ plane,
+             * ignoring any height difference between its spawn point and the player.
+             */
             toPlayer.y = 0f;
-            direction = toPlayer.sqrMagnitude > 0.0001f
+            direction = toPlayer.sqrMagnitude > MinAimSquared
                 ? toPlayer.normalized
                 : transform.forward;
         }

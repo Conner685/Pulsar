@@ -1,41 +1,67 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyFollow : MonoBehaviour
 {
-    public float speed = 4f;
-    public float acceleration = 6f;
-    public float stoppingDistance = 6f; // Stop approaching once this close
-    public float retreatDistance = 3f; // Back away if closer than this
-    public float turnSpeed = 4f; // How quickly the ship rotates
-    public float driftAmount = 0.3f;
-    public float weaveFrequency = 1.5f;
-    public GameObject projectile;
-    public Transform firePoint;
-    public float startTimeBtwShots = 1.5f;
-    public float shootingRange = 8f;
-    public float aimTolerance = 15f;
+    private const float MaxWeaveOffset = 10f;
+    private const float MinDistance = 0.001f;
+    private const float MinSpeedSquared = 0.05f;
+    private const float MinEnemyFacingDir = 0.0001f;
+
+    [SerializeField]
+    private float speed = 4f;
+
+    [SerializeField]
+    private float acceleration = 6f;
+
+    [SerializeField]
+    private float stoppingDistance = 6f; // Stop approaching once this close
+
+    [SerializeField]
+    private float retreatDistance = 3f; // Back away if closer than this
+
+    [SerializeField]
+    private float turnSpeed = 4f; // How quickly the ship rotates
+
+    [SerializeField]
+    private float driftAmount = 0.3f;
+
+    [SerializeField]
+    private float weaveFrequency = 1.5f;
+
+    [SerializeField]
+    private GameObject projectile;
+
+    [SerializeField]
+    private Transform firePoint;
+
+    [SerializeField]
+    private float startTimeBtwShots = 1.5f;
+
+    [SerializeField]
+    private float shootingRange = 8f;
+
+    [SerializeField]
+    private float aimTolerance = 15f;
 
     private Transform player;
-    private Vector3 velocity;
     private float timeBtwShots;
+    private Vector3 velocity;
     private float weaveOffset;
 
     private void Start()
     {
         GameObject playerObj = GameObject.FindWithTag("Player");
-        if (playerObj != null)
+        if (playerObj == null)
         {
-            player = playerObj.transform;
-        }
-        else
-        {
-            Debug.LogWarning(
-                "EnemyFollow: no object tagged 'Player' found in the scene.");
+            throw new InvalidOperationException("Player not found");
         }
 
+        player = playerObj.transform;
+
         timeBtwShots = startTimeBtwShots;
-        weaveOffset
-            = Random.value * 10f;
+        weaveOffset = Random.value * MaxWeaveOffset;
     }
 
     private void Update()
@@ -46,9 +72,14 @@ public class EnemyFollow : MonoBehaviour
         }
 
         Vector3 toPlayer = player.position - transform.position;
+        /*
+         * It resets Y axis differences between player and enemy to zero
+         * to keep movement and aiming on the XZ plane and horizontal.
+         * To ensure their height difference stays zero because direction to player is recalculated every frame.
+         */
         toPlayer.y = 0f;
         float distance = toPlayer.magnitude;
-        Vector3 dirToPlayer = distance > 0.001f
+        Vector3 dirToPlayer = distance > MinDistance
             ? toPlayer / distance
             : transform.forward;
 
@@ -89,7 +120,8 @@ public class EnemyFollow : MonoBehaviour
     private void HandleRotation(Vector3 dirToPlayer, float distance)
     {
         Vector3 lookDir;
-        if (distance <= stoppingDistance || velocity.sqrMagnitude < 0.05f)
+        if (distance <= stoppingDistance ||
+            velocity.sqrMagnitude < MinSpeedSquared)
         {
             lookDir = dirToPlayer;
         }
@@ -98,7 +130,7 @@ public class EnemyFollow : MonoBehaviour
             lookDir = velocity.normalized;
         }
 
-        if (lookDir.sqrMagnitude < 0.0001f)
+        if (lookDir.sqrMagnitude < MinEnemyFacingDir)
         {
             return;
         }
@@ -106,9 +138,9 @@ public class EnemyFollow : MonoBehaviour
         Quaternion targetRotation
             = Quaternion.LookRotation(lookDir, Vector3.up);
 
-        float t = 1f - Mathf.Exp(-turnSpeed * Time.deltaTime);
+        float turnAmount = 1f - Mathf.Exp(-turnSpeed * Time.deltaTime);
         transform.rotation
-            = Quaternion.Slerp(transform.rotation, targetRotation, t);
+            = Quaternion.Slerp(transform.rotation, targetRotation, turnAmount);
     }
 
     private void HandleShooting(Vector3 dirToPlayer, float distance)
@@ -131,9 +163,14 @@ public class EnemyFollow : MonoBehaviour
             return;
         }
 
-        Transform spawn = firePoint != null ? firePoint : transform;
-        Instantiate(projectile, spawn.position,
-            spawn.rotation);
+        if (firePoint == null)
+        {
+            throw new InvalidOperationException(
+                "FirePoint is missing. Assign it in the Inspector.");
+        }
+
+        Instantiate(projectile, firePoint.position,
+            firePoint.rotation);
         timeBtwShots = startTimeBtwShots;
     }
 }
